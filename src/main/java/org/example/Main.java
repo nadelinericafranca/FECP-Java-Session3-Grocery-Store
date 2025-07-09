@@ -102,8 +102,16 @@ public class Main {
         boolean productExists = products.containsKey(name);
 
         if (productExists) {
+            if (products.get(name) != quantity) {
+                products.replace(name, quantity);
+                return "Product already exists. Updating stock instead.";
+            }
             return "Product already exists.";
         } else {
+            if (quantity <= 0 ) {
+               return "Quantity must be a positive number.";
+            }
+
             products.put(name, quantity);
             return "Product Added!";
         }
@@ -121,7 +129,7 @@ public class Main {
             }
             return toProperCase(name) + " is in stock: " + stock;
         } else {
-            return toProperCase(name) + " not found.";
+            return "Product not found.";
         }
     }
 
@@ -129,6 +137,10 @@ public class Main {
         boolean productExists = products.containsKey(name);
 
         if (productExists) {
+            if (newQuantity <= 0 ) {
+                return "Quantity must be a positive number.";
+            }
+
             products.replace(name, newQuantity);
             return "Stock updated!";
         } else {
