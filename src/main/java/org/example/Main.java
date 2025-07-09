@@ -28,7 +28,6 @@ public class Main {
                             System.out.println("There are no products in the inventory.");
                             break;
                         };
-
                         viewInventory();
                         break;
 
@@ -87,25 +86,19 @@ public class Main {
     public static void viewInventory() {
         System.out.println("\nCurrent Inventory:");
         for (Map.Entry<String, Integer> entry : products.entrySet()) {
-            System.out.println(entry.getKey() + " - " + entry.getValue() + " pcs");
+            System.out.println(toProperCase(entry.getKey()) + " - " + entry.getValue() + " pcs");
         }
     }
 
     public static String addProduct(String name, Scanner scanner) {
         // Validate if key exists already
-        boolean productExists = products.containsKey(name.trim());
+        boolean productExists = products.containsKey(name);
 
         if (productExists) {
             return "Product already exists.";
         } else {
             System.out.print("Enter quantity: ");
-            int quantity = scanner.nextInt();
-            scanner.nextLine();
-
-            if (quantity <= 0 ) {
-                return "Quantity must be a positive number.";
-            }
-
+            int quantity = getQuantity(scanner);
 
             products.put(name, quantity);
             return "Product Added!";
@@ -113,7 +106,7 @@ public class Main {
     }
 
     public static String checkProduct(String name) {
-        boolean productExists = products.containsKey(name.trim());
+        boolean productExists = products.containsKey(name);
         int stock = 0;
 
         if (productExists) {
@@ -122,51 +115,68 @@ public class Main {
                     stock = entry.getValue();
                 }
             }
-            return name + " is in stock: " + stock;
+            return toProperCase(name) + " is in stock: " + stock;
         } else {
-            return name + " is not in stock.";
+            return toProperCase(name) + " not found.";
         }
     }
 
     public static String updateProduct(String name, Scanner scanner) {
-        boolean productExists = products.containsKey(name.trim());
+        boolean productExists = products.containsKey(name);
 
         if (productExists) {
             System.out.print("Enter new stock quantity: ");
-            int newQuantity = scanner.nextInt();
-            scanner.nextLine();
+            int newQuantity = getQuantity(scanner);
 
-            if (newQuantity <= 0 ) {
-                return "Quantity must be a positive number.";
-            }
-
-            products.replace(name.trim(), newQuantity);
+            products.replace(name, newQuantity);
             return "Stock updated!";
         } else {
-            return "Product does not exist.";
+            return "Product not found.";
         }
     }
 
     public static String removeProduct(String name) {
-        boolean productExists = products.containsKey(name.trim());
+        boolean productExists = products.containsKey(name);
 
         if (productExists) {
             products.remove(name);
             return "Product removed.";
         } else {
-            return "Product does not exist.";
+            return "Product not found.";
+        }
+    }
+
+    public static int getQuantity(Scanner scanner) {
+        while (true) {
+            try {
+                int input = Integer.parseInt(scanner.nextLine());
+
+                if (input <= 0 ) {
+                    System.out.println("Quantity must be a positive number.");
+                }
+
+                return input;
+
+            } catch (NumberFormatException e) {
+                System.out.println("Quantity must be an integer.");
+            }
         }
     }
 
     public static String getProductName(Scanner scanner) {
-        String input = scanner.nextLine();
-
         while(true) {
+            String input = scanner.nextLine().trim();
+
             if (input.isEmpty()) {
                 System.out.println("Product name cannot be empty.");
             } else {
-                return input;
+                return input.toLowerCase();
             }
         }
+    }
+
+    // Helper method to capitalize first letter of product name for printing
+    public static String toProperCase(String name) {
+        return name.substring(0, 1).toUpperCase() + name.substring(1);  // convert first letter to uppercase
     }
 }
