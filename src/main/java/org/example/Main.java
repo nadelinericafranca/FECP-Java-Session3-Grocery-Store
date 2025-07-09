@@ -8,6 +8,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         String name;
+        int quantity;
 
         while (true) {
             System.out.println("\n--- Grocery Inventory Menu ---");
@@ -35,7 +36,10 @@ public class Main {
                         System.out.print("Enter product name: ");
                         name = getProductName(scanner);
 
-                        System.out.println(addProduct(name, scanner));
+                        System.out.print("Enter quantity: ");
+                        quantity = getQuantity(scanner);
+
+                        System.out.println(addProduct(name, quantity));
                         break;
                     case 3: // Check Product
                         if (products.isEmpty()) {
@@ -57,7 +61,10 @@ public class Main {
                         System.out.print("Enter product name to update: ");
                         name = getProductName(scanner);
 
-                        System.out.println(updateProduct(name, scanner));
+                        System.out.print("Enter new stock quantity: ");
+                        quantity = getQuantity(scanner);
+
+                        System.out.println(updateProduct(name, quantity));
                         break;
                     case 5: // Remove Product
                         if (products.isEmpty()) {
@@ -90,16 +97,13 @@ public class Main {
         }
     }
 
-    public static String addProduct(String name, Scanner scanner) {
+    public static String addProduct(String name, int quantity) {
         // Validate if key exists already
         boolean productExists = products.containsKey(name);
 
         if (productExists) {
             return "Product already exists.";
         } else {
-            System.out.print("Enter quantity: ");
-            int quantity = getQuantity(scanner);
-
             products.put(name, quantity);
             return "Product Added!";
         }
@@ -121,13 +125,10 @@ public class Main {
         }
     }
 
-    public static String updateProduct(String name, Scanner scanner) {
+    public static String updateProduct(String name, int newQuantity) {
         boolean productExists = products.containsKey(name);
 
         if (productExists) {
-            System.out.print("Enter new stock quantity: ");
-            int newQuantity = getQuantity(scanner);
-
             products.replace(name, newQuantity);
             return "Stock updated!";
         } else {
